@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import useUnmountState from './useUnmountState'
+import useUnmountState from './useUnmountedState'
 
 function useSafeState<S>(initialState: S | (() => S)) {
-  const unmount = useUnmountState()
+  const isUnmount = useUnmountState()
   const [state, setState] = useState(initialState)
   const setCurrentState: typeof setState = (currentState) => {
-    if (unmount.current) {
+    if (isUnmount()) {
       return
     }
     setState(currentState)

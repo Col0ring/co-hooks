@@ -1,51 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { AsyncFunction } from '../typings/tools'
+import useAsyncFn, { AsyncState } from './useAsyncFn'
 
-type FetchFunction<R, P extends any[] = any[]> = (...args: P) => Promise<R>
-
-interface UseFetchReturn<T> {
-  loading: boolean
-  err: any
-  data: T
-}
-
-function useFetch<R, P extends any[] = any[]>(
-  request: FetchFunction<R, P>,
-  defaultValue: R,
-  deps?: React.DependencyList,
+function useAsync<P extends any[] = [], R = any>(
+  asyncFn: AsyncFunction<P, R>,
+  deps: React.DependencyList = [],
+  initialState: Partial<AsyncState<R>> = {},
   ...args: P
-): UseFetchReturn<R> {
-  // fetch count
-  const countRef = useRef(0)
-  const [data, setData] = useState<R>(defaultValue)
-  const [err, setErr] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
+) {
+  const defaultState = useMemo(
+    () => ({
+      loading: true,
+      ...initialState
+    }),
+    []
+  )
+  const [state, callbackFn] = useAsyncFn(asyncFn, deps, defaultState)
 
   useEffect(() => {
-    setLoading(true)
-    countRef.current++
-    request(...args)
-      .then(
-        (res) => {
-          setData(res)
-        },
-        (error) => {
-          setErr(error)
-        }
-      )
-      .finally(() => {
-        countRef.current--
-        if (countRef.current === 0) {
-          setLoading(false)
-        }
-      })
-  }, deps)
+    callbackFn(...args)
+  }, [callbackFn])
 
-  return {
-    data,
-    err,
-    loading
-  }
+  return state
 }
-
-export type { FetchFunction, UseFetchReturn }
-export default useFetch
+export type { AsyncState }
+export default useAsync

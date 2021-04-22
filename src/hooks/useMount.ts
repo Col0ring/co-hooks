@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 
-function useMount(effect: Parameters<typeof useEffect>[0]) {
-  useEffect(effect, [])
+function useMount(fn: () => void) {
+  useEffect(() => {
+    fn()
+  }, [])
 }
 
 export default useMount

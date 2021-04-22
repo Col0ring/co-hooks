@@ -16,7 +16,7 @@ function App() {
     })
   }, [])
 
-  const { data, loading } = useAsync(fetchFunction, count * 2, [count], count)
+  const { data, loading } = useAsync(fetchFunction, [count], {}, 1)
   return (
     <div className="App">
       <header className="App-header">

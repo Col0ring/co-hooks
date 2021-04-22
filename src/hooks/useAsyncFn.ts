@@ -1,51 +1,68 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
+import useMountedState from './useMountedState'
+import useSetState from './useSetState'
+import { AsyncFunction } from '../typings/tools'
 
-type FetchFunction<R, P extends any[] = any[]> = (...args: P) => Promise<R>
-
-interface UseFetchReturn<T> {
+interface AsyncState<T> {
   loading: boolean
   err: any
-  data: T
+  data?: T
 }
 
-function useFetch<R, P extends any[] = any[]>(
-  request: FetchFunction<R, P>,
-  defaultValue: R,
-  deps?: React.DependencyList,
-  ...args: P
-): UseFetchReturn<R> {
+type UseAsyncFnReturn<P extends any[], R> = [AsyncState<R>, AsyncFunction<P, R>]
+
+function useAsyncFn<P extends any[] = any[], R = any>(
+  asyncFn: AsyncFunction<P, R>,
+  deps: React.DependencyList = [],
+  initialState: Partial<AsyncState<R>> = {}
+): UseAsyncFnReturn<P, R> {
+  const defaultState: AsyncState<R> = useMemo(
+    () => ({
+      loading: initialState.loading || false,
+      err: initialState.err || null,
+      data: undefined
+    }),
+    []
+  )
   // fetch count
   const countRef = useRef(0)
-  const [data, setData] = useState<R>(defaultValue)
-  const [err, setErr] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
+  const isMounted = useMountedState()
+  const [state, setState] = useSetState(defaultState)
 
-  useEffect(() => {
-    setLoading(true)
+  const callbackFn: typeof asyncFn = useCallback((...args) => {
+    setState({
+      loading: true
+    })
     countRef.current++
-    request(...args)
+
+    return asyncFn(...args)
       .then(
-        (res) => {
-          setData(res)
+        (value) => {
+          countRef.current === 0 &&
+            isMounted() &&
+            setState({
+              data: value,
+              loading: false
+            })
+          return value
         },
         (error) => {
-          setErr(error)
+          countRef.current === 0 &&
+            isMounted() &&
+            setState({
+              err: error,
+              loading: false
+            })
+          return error
         }
       )
       .finally(() => {
         countRef.current--
-        if (countRef.current === 0) {
-          setLoading(false)
-        }
       })
   }, deps)
 
-  return {
-    data,
-    err,
-    loading
-  }
+  return [state, callbackFn]
 }
 
-export type { FetchFunction, UseFetchReturn }
-export default useFetch
+export type { AsyncState, UseAsyncFnReturn }
+export default useAsyncFn

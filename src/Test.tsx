@@ -1,60 +1,36 @@
-import React, { memo, useState } from 'react'
-import useModel from './hooks/useModel'
-import useReactive from './hooks/useReactive'
-import usePrevious from './hooks/usePrevious'
-import useDebounceEffect from './hooks/useDebounceEffect'
-import useSetState from './hooks/useSetState'
-const initial = {
-  a: {
-    a: {
-      a: 1
+import React from 'react'
+import useMethods from './hooks/useMethods'
+
+const initialState = {
+  count: 0
+}
+
+function createMethods(state: typeof initialState) {
+  return {
+    reset() {
+      return initialState
+    },
+    increment(c: number, b: string) {
+      console.log(c)
+      console.log(b)
+      return { ...state, count: state.count + 1 }
+    },
+    decrement() {
+      return { ...state, count: state.count - 1 }
     }
   }
 }
-const Test: React.FC = () => {
-  const [state, setState] = useSetState({ a: 1, b: 2 })
-  const [v, setV] = useState(initial)
-  const p0 = usePrevious({
-    a: {
-      a: {
-        a: 1
-      }
-    }
-  })
-  const p1 = usePrevious(p0)
-  const p2 = usePrevious(p1)
+
+const Demo = () => {
+  const [state, methods] = useMethods(createMethods, initialState)
+
   return (
     <>
-      <div>
-        <button
-          onClick={() =>
-            setState({
-              a: state.a + 1
-            })
-          }
-        >
-          +1
-        </button>
-        <button
-          onClick={() =>
-            setV({
-              a: {
-                a: {
-                  a: v.a.a.a + 1
-                }
-              }
-            })
-          }
-        >
-          +v
-        </button>
-      </div>
-      <div>
-        {state.a},,,,
-        {p0?.a.a.a},{p1?.a.a.a},{p2?.a.a.a}
-      </div>
+      <p>Count: {state.count}</p>
+      <button onClick={methods.decrement}>-</button>
+      <button onClick={() => methods.increment(1, '1232')}>+</button>
     </>
   )
 }
 
-export default memo(Test)
+export default Demo

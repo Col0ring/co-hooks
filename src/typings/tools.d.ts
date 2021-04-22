@@ -2,7 +2,7 @@ declare global {
   type GlobalObject<V = any> = Record<string | symbol, V>
   type GlobalFunction<P extends any[] = any[], R = any> = (...args: P) => R
 }
-
+type Key = string | symbol | number
 type Keys<Modules> = keyof Modules
 type Values<Modules> = Modules[Keys<Modules>]
 
@@ -40,7 +40,16 @@ type FunctionParamsValueAndReturnPartial<T> = T extends (
   ? (...args: ObjectValuesPartial<P>) => ObjectKeysPartial<R>
   : T
 
+type AsyncFunction<P extends any[] = any[], R = any> = (
+  ...args: P
+) => Promise<R>
+
+type PromiseValue<T> = T extends (...args: any[]) => Promise<infer V>
+  ? V
+  : never
+
 export type {
+  Key,
   Keys,
   Values,
   FunctionItems,
@@ -51,5 +60,7 @@ export type {
   FunctionParamsPartial,
   FunctionParamsValuePartial,
   FunctionParamsAndReturnPartial,
-  FunctionParamsValueAndReturnPartial
+  FunctionParamsValueAndReturnPartial,
+  AsyncFunction,
+  PromiseValue
 }
