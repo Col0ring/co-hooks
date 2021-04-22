@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 
 type Subscription<T> = (val: T) => void
 
-export class EventEmitter<T> {
+class EventEmitter<T> {
   private subscriptions = new Set<Subscription<T>>()
 
   emit(val: T) {
@@ -28,10 +28,14 @@ export class EventEmitter<T> {
   }
 }
 
-export default function useEventEmitter<T = void>() {
+function useEventEmitter<T = void>() {
   const ref = useRef<EventEmitter<T>>()
   if (!ref.current) {
     ref.current = new EventEmitter()
   }
   return ref.current
 }
+
+export type { Subscription }
+export { EventEmitter }
+export default useEventEmitter
