@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
-import usePersistFn from '../usePersistFn'
-
+import usePersistFn from './usePersistFn'
 export type TargetDate = Date | number | string | undefined
 
-export type Options = {
+export type UseCountdownOptions = {
   targetDate?: TargetDate
   interval?: number
   onEnd?: () => void
 }
 
-export interface FormattedRes {
+export interface FormattedResult {
   days: number
   hours: number
   minutes: number
@@ -18,7 +17,8 @@ export interface FormattedRes {
   milliseconds: number
 }
 
-const calcLeft = (t?: TargetDate) => {
+// 计算剩余时间
+function calcLeft(t?: TargetDate) {
   if (!t) {
     return 0
   }
@@ -30,7 +30,8 @@ const calcLeft = (t?: TargetDate) => {
   return left
 }
 
-const parseMs = (milliseconds: number): FormattedRes => {
+// 转换 result
+function parseMs(milliseconds: number): FormattedResult {
   return {
     days: Math.floor(milliseconds / 86400000),
     hours: Math.floor(milliseconds / 3600000) % 24,
@@ -40,26 +41,26 @@ const parseMs = (milliseconds: number): FormattedRes => {
   }
 }
 
-const useCountdown = (options?: Options) => {
+function useCountdown(options?: UseCountdownOptions) {
   const { targetDate, interval = 1000, onEnd } = options || {}
 
   const [target, setTargetDate] = useState<TargetDate>(targetDate)
+  // 剩余时间
   const [timeLeft, setTimeLeft] = useState(() => calcLeft(target))
 
   const onEndPersistFn = usePersistFn(() => {
-    if (onEnd) {
-      onEnd()
-    }
+    onEnd?.()
   })
 
   useEffect(() => {
+    // 直接 target 为 0
     if (!target) {
       // for stop
       setTimeLeft(0)
       return
     }
 
-    // 立即执行一次
+    // 立即执行一次，剩余时间
     setTimeLeft(calcLeft(target))
 
     const timer = setInterval(() => {

@@ -1,10 +1,10 @@
-declare global {
-  type GlobalObject<V = any> = Record<string | symbol, V>
-  type GlobalFunction<P extends any[] = any[], R = any> = (...args: P) => R
-}
 type Key = string | symbol | number
 type Keys<Modules> = keyof Modules
 type Values<Modules> = Modules[Keys<Modules>]
+declare global {
+  type GlobalObject<V = any> = Record<Key, V>
+  type GlobalFunction<P extends any[] = any[], R = any> = (...args: P) => R
+}
 
 type FunctionItems<T> = T extends GlobalFunction ? T : never
 type ArrayItem<T> = T extends Array<infer U> ? U : never

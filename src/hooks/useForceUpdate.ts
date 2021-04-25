@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
 
+const mod = 10 ** 9 + 7
 function useForceUpdate() {
-  const [, setState] = useState(false)
+  const [, setState] = useState(0)
   const forceUpdate = useCallback(() => {
-    setState((state) => !state)
+    setState((state) => (state + 1) % mod)
   }, [])
   return forceUpdate
 }

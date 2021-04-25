@@ -1,20 +1,21 @@
-import React, {
-  memo,
-  useEffect,
-  useRef,
-  useLayoutEffect,
-  useMemo,
-  useState
-} from 'react'
-import useModel from './hooks/useModel'
-import useReactive from './hooks/useReactive'
+import React, { memo } from 'react'
+import useCountDown from './hooks/useCountDown'
 const Test: React.FC = () => {
+  const [time, setTargetTime] = useCountDown({
+    targetDate: Date.now() + 10000
+  })
   return (
     <>
       <div>
-        <button>Click</button>
+        <button
+          onClick={() => {
+            setTargetTime(Date.now() + 20000)
+          }}
+        >
+          Click
+        </button>
       </div>
-      <div></div>
+      <div>{time}</div>
     </>
   )
 }

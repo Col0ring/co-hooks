@@ -1,16 +1,18 @@
 import { useState, useCallback, useRef } from 'react'
 
-interface IData<T> {
+interface HistoryData<T> {
   present?: T
   past: T[]
   future: T[]
 }
 
-const dumpIndex = <T>(step: number, arr: T[]) => {
+// range
+function dumpIndex<T>(step: number, arr: T[]) {
   let index =
     step > 0
       ? step - 1 // move forward
       : arr.length + step // move backward
+
   if (index >= arr.length - 1) {
     index = arr.length - 1
   }
@@ -20,7 +22,7 @@ const dumpIndex = <T>(step: number, arr: T[]) => {
   return index
 }
 
-const split = <T>(step: number, targetArr: T[]) => {
+function split<T>(step: number, targetArr: T[]) {
   const index = dumpIndex(step, targetArr)
   return {
     _current: targetArr[index],
@@ -29,8 +31,8 @@ const split = <T>(step: number, targetArr: T[]) => {
   }
 }
 
-export default function useHistoryTravel<T>(initialValue?: T) {
-  const [history, setHistory] = useState<IData<T | undefined>>({
+function useHistoryTravel<T>(initialValue?: T) {
+  const [history, setHistory] = useState<HistoryData<T | undefined>>({
     present: initialValue,
     past: [],
     future: []
@@ -41,8 +43,8 @@ export default function useHistoryTravel<T>(initialValue?: T) {
   const initialValueRef = useRef(initialValue)
 
   const reset = useCallback(
-    (...params: T[]) => {
-      const _initial = params.length > 0 ? params[0] : initialValueRef.current
+    (val?: T) => {
+      const _initial = val ? val : initialValueRef.current
       initialValueRef.current = _initial
 
       setHistory({
@@ -110,18 +112,24 @@ export default function useHistoryTravel<T>(initialValue?: T) {
     [_backward, _forward]
   )
 
+  const back = useCallback(() => {
+    go(-1)
+  }, [go])
+
+  const forward = useCallback(() => {
+    go(1)
+  }, [go])
+
   return {
     value: present,
     setValue: updateValue,
     backLength: past.length,
     forwardLength: future.length,
     go,
-    back: useCallback(() => {
-      go(-1)
-    }, [go]),
-    forward: useCallback(() => {
-      go(1)
-    }, [go]),
+    back,
+    forward,
     reset
   }
 }
+
+export default useHistoryTravel

@@ -1,36 +1,32 @@
 import React from 'react'
-import useMethods from './hooks/useMethods'
-
-const initialState = {
-  count: 0
-}
-
-function createMethods(state: typeof initialState) {
-  return {
-    reset() {
-      return initialState
-    },
-    increment(c: number, b: string) {
-      console.log(c)
-      console.log(b)
-      return { ...state, count: state.count + 1 }
-    },
-    decrement() {
-      return { ...state, count: state.count - 1 }
-    }
+import useForceUpdate from './hooks/useForceUpdate'
+import useUniqueKey from './hooks/useUniqueKey'
+// import { useReactive } from 'ahooks'
+import useArray from './hooks/useReactive'
+const i = {
+  bug: '',
+  bugs: ['feat', 'fix', 'chore'],
+  addBug(bug: string) {
+    this.bugs.push(bug)
+  },
+  get bugsCount() {
+    return this.bugs.length
   }
 }
-
-const Demo = () => {
-  const [state, methods] = useMethods(createMethods, initialState)
+const s = [1, 2, 3]
+export default () => {
+  const state = useArray([1, 2, 3])
+  const forceUpdate = useForceUpdate()
+  const getUniqueKey = useUniqueKey()
 
   return (
-    <>
-      <p>Count: {state.count}</p>
-      <button onClick={methods.decrement}>-</button>
-      <button onClick={() => methods.increment(1, '1232')}>+</button>
-    </>
+    <div>
+      {state.map((i, index) => {
+        return <p key={getUniqueKey()}>{Math.random()}</p>
+      })}
+      <button onClick={() => state.push(4)}>forceA</button>
+
+      <button onClick={() => forceUpdate()}>force</button>
+    </div>
   )
 }
-
-export default Demo

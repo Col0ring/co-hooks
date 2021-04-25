@@ -15,7 +15,6 @@ interface UseReactiveOptions<T> {
     oldValue: T,
     status: 'initial' | 'set' | 'delete'
   ) => void
-  watchInitial?: boolean
 }
 
 // // k:v 原对象:克隆对象
@@ -102,9 +101,6 @@ function useReactive<T extends object>(
   initial: T,
   options: UseReactiveOptions<T> = {}
 ): T {
-  const watchInitial =
-    options.watchInitial !== undefined ? options.watchInitial : true
-  const prevTarget = usePrevious(initial)
   const currentTarget = useRef(initial)
   const forceUpdate = useForceUpdate()
   const reactive = useCallback(
@@ -116,39 +112,37 @@ function useReactive<T extends object>(
           return isObject(res) ? reactive(res) : res
         },
         set(target, key, val) {
-          try {
-            Reflect.set(target, key, val)
+          const res = Reflect.set(target, key, val)
+          if (res) {
             options.onChange?.(currentTarget.current, initial, ChangeStatus.Set)
             forceUpdate()
-            return true
-          } catch {
-            return false
           }
+          return res
         },
+
         deleteProperty(target, key) {
           const res = Reflect.deleteProperty(target, key)
-          options.onChange?.(
-            currentTarget.current,
-            initial,
-            ChangeStatus.Delete
-          )
-          forceUpdate()
+          if (res) {
+            options.onChange?.(
+              currentTarget.current,
+              initial,
+              ChangeStatus.Delete
+            )
+            forceUpdate()
+          }
           return res
         }
       })
       return observer
     },
-    [forceUpdate, initial, options.onChange]
+    [forceUpdate, options.onChange]
   )
 
   const modelValue = useMemo(() => {
     currentTarget.current = cloneDeep(initial)
     return reactive(currentTarget.current)
-  }, [initial])
+  }, [])
 
-  if (watchInitial && prevTarget !== undefined && prevTarget !== initial) {
-    options.onChange?.(initial, prevTarget, ChangeStatus.Initial)
-  }
   return modelValue
 }
 

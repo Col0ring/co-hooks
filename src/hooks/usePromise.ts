@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import useMountedState from './useMountedState'
 
 type UsePromiseReturn = <T>(promise: Promise<T>) => Promise<T>
-
+// Mounted 后才 promise
 function usePromise(): UsePromiseReturn {
   const isMounted = useMountedState()
   return useCallback(

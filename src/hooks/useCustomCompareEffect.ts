@@ -10,7 +10,7 @@ function useCustomCompareEffect(
   deps: React.DependencyList,
   depsEqual: DepsEqualFn
 ) {
-  const ref = useRef<React.DependencyList>(deps)
+  const ref = useRef(deps)
 
   if (!depsEqual(deps, ref.current)) {
     ref.current = deps
