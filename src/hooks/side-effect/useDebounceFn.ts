@@ -1,6 +1,6 @@
 import { useCallback, useRef, useMemo } from 'react'
 import debounce from 'lodash/debounce'
-import useUnmount from './useUnmount'
+import useUnmount from '../lifecycle/useUnmount'
 
 enum DebounceStatus {
   Pending = 'pending',

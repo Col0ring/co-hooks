@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { AsyncFunction } from '../typings/tools'
+import { AsyncFunction } from '../../typings/tools'
 import useAsync, { AsyncState } from './useAsync'
 
 type UseAsyncRetryReturn<T> = [state: AsyncState<T>, retry: () => void]

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useMemo } from 'react'
 import throttle from 'lodash/throttle'
-import useUnmount from './useUnmount'
+import useUnmount from '../lifecycle/useUnmount'
 
 enum ThrottleStatus {
   Pending = 'pending',

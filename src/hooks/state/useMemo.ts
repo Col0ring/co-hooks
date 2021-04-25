@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import usePrevious from './usePrevious'
-import { isSameDeps } from '../utils/tools'
+import { isSameDeps } from '../../utils/tools'
 
 function useMemo<T>(factory: () => T, deps?: React.DependencyList): T {
   const prevDeps = usePrevious(deps)

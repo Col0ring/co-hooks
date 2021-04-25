@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import Test from './Test'
 import Test2 from './Test2'
-import useAsync from './hooks/useAsync'
+import useAsync from './hooks/side-effect/useAsync'
 import logo from './logo.svg'
 import './App.css'
 

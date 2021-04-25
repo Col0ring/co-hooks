@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import useUnmountedState from './useUnmountedState'
+import useUnmountedState from '../state/useUnmountedState'
 
 type useUnmountPromiseReturn = <T, E = any>(
   promise: Promise<T>,

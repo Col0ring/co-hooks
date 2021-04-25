@@ -2,7 +2,7 @@ import { useMemo, useCallback, useRef } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import useForceUpdate from './useForceUpdate'
 import usePrevious from './usePrevious'
-import { isObject } from '../utils/tools'
+import { isObject } from '../../utils/tools'
 enum ChangeStatus {
   Initial = 'initial',
   Set = 'set',

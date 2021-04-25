@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import useReactive, { UseReactiveOptions } from './useReactive'
-import { props2Arr } from '../utils/tools'
+import { props2Arr } from '../../utils/tools'
 
 type UseModelOptions<T> = UseReactiveOptions<T>
 

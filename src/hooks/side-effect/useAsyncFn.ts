@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import useMountedState from './useMountedState'
-import useSetState from './useSetState'
-import { AsyncFunction } from '../typings/tools'
+import useMountedState from '../state/useMountedState'
+import useSetState from '../state/useSetState'
+import { AsyncFunction } from '../../typings/tools'
 
 interface AsyncState<T> {
   loading: boolean

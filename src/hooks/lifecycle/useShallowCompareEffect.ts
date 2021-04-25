@@ -1,6 +1,6 @@
 import React from 'react'
 import useCustomCompareEffect from './useCustomCompareEffect'
-import { isShallowEqual } from '../utils/tools'
+import { isShallowEqual } from '../../utils/tools'
 
 function shallowEqualDepsList(
   prevDeps: React.DependencyList,

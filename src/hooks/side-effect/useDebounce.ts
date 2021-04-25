@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useDebounceFn, { DebounceOptions } from './useDebounceFn'
-import useUpdateEffect from './useUpdateEffect'
+import useUpdateEffect from '../lifecycle/useUpdateEffect'
 
 function useDebounce<T>(value: T, wait: number = 0, options?: DebounceOptions) {
   const [debounced, setDebounced] = useState(value)

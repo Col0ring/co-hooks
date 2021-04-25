@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { isFunction } from '../utils/tools'
-import { ObjectKeysPartial, FunctionReturnPartial } from '../typings/tools'
+import { isFunction } from '../../utils/tools'
+import { ObjectKeysPartial, FunctionReturnPartial } from '../../typings/tools'
 
 type setMergeStateParamsTool<T> = {
   [K in keyof T]: ObjectKeysPartial<FunctionReturnPartial<T[K]>>

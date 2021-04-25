@@ -17,7 +17,7 @@
 // }
 
 import React, { useEffect } from 'react'
-import useDebounceFn, { DebounceOptions } from './useDebounceFn'
+import useDebounceFn, { DebounceOptions } from '../side-effect/useDebounceFn'
 
 function useDebounceEffect(
   effect: React.EffectCallback,

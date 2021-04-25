@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from 'react'
-import { isBrowser } from '../utils/tools'
+import { isBrowser } from '../../utils/tools'
 
 const useSsrLayoutEffect = isBrowser ? useLayoutEffect : useEffect
 

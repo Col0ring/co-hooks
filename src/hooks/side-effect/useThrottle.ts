@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useThrottleFn, { ThrottleOptions } from './useThrottleFn'
-import useUpdateEffect from './useUpdateEffect'
+import useUpdateEffect from '../lifecycle/useUpdateEffect'
 
 function useThrottle<T>(value: T, wait: number = 0, options?: ThrottleOptions) {
   const [throttled, setThrottled] = useState(value)

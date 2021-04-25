@@ -1,8 +1,8 @@
 import React from 'react'
-import useForceUpdate from './hooks/useForceUpdate'
-import useUniqueKey from './hooks/useUniqueKey'
+import useForceUpdate from './hooks/state/useForceUpdate'
+import useUniqueKey from './hooks/state/useUniqueKey'
 // import { useReactive } from 'ahooks'
-import useArray from './hooks/useReactive'
+import useArray from './hooks/state/useReactive'
 const i = {
   bug: '',
   bugs: ['feat', 'fix', 'chore'],

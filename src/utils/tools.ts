@@ -47,7 +47,7 @@ export function isShallowEqual(val: any, other: any) {
   if (isObject(val) && isObject(other)) {
     const props1 = Object.getOwnPropertyNames(val)
     const props2 = Object.getOwnPropertyNames(other)
-    if (props1.length != props2.length) {
+    if (props1.length !== props2.length) {
       return false
     }
     const len = props1.length

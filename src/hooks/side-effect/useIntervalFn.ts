@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import useUnmount from './useUnmount'
+import useUnmount from '../lifecycle/useUnmount'
 
 enum IntervalStatus {
   Free = 'free',

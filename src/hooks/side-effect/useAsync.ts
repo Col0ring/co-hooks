@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { AsyncFunction } from '../typings/tools'
+import { AsyncFunction } from '../../typings/tools'
 import useAsyncFn, { AsyncState } from './useAsyncFn'
 
 function useAsync<P extends any[] = [], R = any>(

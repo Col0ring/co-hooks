@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import useThrottleFn, { ThrottleOptions } from './useThrottleFn'
+import useThrottleFn, { ThrottleOptions } from '../side-effect/useThrottleFn'
 
 function useThrottleEffect(
   effect: React.EffectCallback,

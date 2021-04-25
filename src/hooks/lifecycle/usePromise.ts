@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import useMountedState from './useMountedState'
+import useMountedState from '../state/useMountedState'
 
 type UsePromiseReturn = <T>(promise: Promise<T>) => Promise<T>
 // Mounted 后才 promise

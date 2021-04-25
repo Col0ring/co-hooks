@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react'
-import useFirstMountState from './useFirstMountState'
+import useFirstMountState from '../state/useFirstMountState'
 
 const useUpdateLayoutEffect: typeof useLayoutEffect = (effect, deps) => {
   const isFirstMount = useFirstMountState()

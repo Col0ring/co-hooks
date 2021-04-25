@@ -1,5 +1,5 @@
 import { Reducer, useMemo, useReducer } from 'react'
-import { Key } from '../typings/tools'
+import { Key } from '../../typings/tools'
 interface Action<T extends Key> {
   type: T
   payload?: any
