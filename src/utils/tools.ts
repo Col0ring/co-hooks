@@ -27,6 +27,7 @@ export function isFunction(fn: any): fn is Function {
 }
 
 export function props2Arr<T extends GlobalObject>(obj: T): T[keyof T][] {
+  // Object.values
   return Object.keys(obj).map((key) => obj[key])
 }
 

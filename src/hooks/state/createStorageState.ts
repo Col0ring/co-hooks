@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState, useMemo } from 'react'
-import { isBrowser, noop, props2Arr } from '../../utils/tools'
+import { isBrowser, noop } from '../../utils/tools'
 import useSsrLayoutEffect from '../lifecycle/useSsrLayoutEffect'
 import usePersistFn from './usePersistFn'
 
@@ -39,7 +39,7 @@ function createStorageState(storage: Storage) {
             ? (value: string) => value
             : options.deserializer
           : JSON.parse,
-      [...props2Arr(options || {})]
+      Object.values(options || {})
     )
 
     const initializer = usePersistFn((key: string) => {

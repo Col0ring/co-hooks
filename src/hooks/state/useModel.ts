@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import useReactive, { UseReactiveOptions } from './useReactive'
-import { props2Arr } from '../../utils/tools'
 
 type UseModelOptions<T> = UseReactiveOptions<T>
 
@@ -57,7 +56,7 @@ function useModel<T>(
         options.onChange?.(value.value, oldValue.value, status)
       }
     }),
-    [...props2Arr(options)]
+    Object.values(options)
   )
   const modelValue = useReactive(refValue, refOptions)
 
