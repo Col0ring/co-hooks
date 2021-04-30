@@ -9,7 +9,6 @@ import {
 
 // 第一个参数是是否 valid,实际是通过 validator 的烦值返回一个数组才可以，然后数组里面的其它参数额可以自己控制
 type ValidityState = [boolean | undefined, ...any[]] | [undefined]
-
 interface StateValidator<V, S> {
   (state: S): V
   // 如果只有一个参数要返回值，如果有两个参数就自己使用 dispatch
