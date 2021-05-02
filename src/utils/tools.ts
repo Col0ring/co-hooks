@@ -2,6 +2,10 @@ import React from 'react'
 
 export function noop() {}
 
+export const nullRef: React.RefObject<any> = {
+  current: null
+}
+
 export const isBrowser = typeof window !== 'undefined'
 
 export const isNavigator = typeof navigator !== 'undefined'

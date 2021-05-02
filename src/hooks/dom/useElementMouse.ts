@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
+import { nullRef } from '../../utils/tools'
 import useRafState from '../state/useRafState'
 import useEventListener from './useEventListener'
-
+import useHover from './useHover'
 interface UseElementMouseState {
   // 在 document 的位置
   docX: number
@@ -16,6 +17,11 @@ interface UseElementMouseState {
   elW: number
 }
 
+interface UseElementMouseOptions {
+  whenHovered?: boolean
+  bound?: boolean
+}
+
 const initState: UseElementMouseState = {
   docX: NaN,
   docY: NaN,
@@ -27,35 +33,49 @@ const initState: UseElementMouseState = {
   elW: NaN
 }
 
-function useElementMouse(ref: React.RefObject<Element>): UseElementMouseState {
+function useElementMouse(
+  ref: React.RefObject<Element>,
+  options: UseElementMouseOptions = {}
+): UseElementMouseState {
+  const whenHovered = !!options.whenHovered
+  const bound = !!options.bound
   const documentRef = useRef(document)
+  const isHovering = useHover(ref)
   const [state, setState] = useRafState<UseElementMouseState>(initState)
-  useEventListener(documentRef, 'mousemove', (event) => {
-    if (!ref.current) {
-      return
-    }
-    const {
-      left,
-      top,
-      width: elW,
-      height: elH
-    } = ref.current.getBoundingClientRect()
-    const posX = left + window.pageXOffset
-    const posY = top + window.pageYOffset
-    const elX = event.pageX - posX
-    const elY = event.pageY - posY
+  useEventListener(
+    whenHovered && !isHovering ? nullRef : documentRef,
+    'mousemove',
+    (event) => {
+      if (!ref.current) {
+        return
+      }
+      const {
+        left,
+        top,
+        width: elW,
+        height: elH
+      } = ref.current.getBoundingClientRect()
+      const posX = left + window.pageXOffset
+      const posY = top + window.pageYOffset
+      let elX = event.pageX - posX
+      let elY = event.pageY - posY
+      if (bound) {
+        elX = Math.max(0, Math.min(elX, elW))
+        elY = Math.max(0, Math.min(elY, elH))
+      }
 
-    setState({
-      docX: event.pageX,
-      docY: event.pageY,
-      posX,
-      posY,
-      elX,
-      elY,
-      elH,
-      elW
-    })
-  })
+      setState({
+        docX: event.pageX,
+        docY: event.pageY,
+        posX,
+        posY,
+        elX,
+        elY,
+        elH,
+        elW
+      })
+    }
+  )
 
   return state
 }
