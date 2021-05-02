@@ -1,6 +1,7 @@
 type Key = string | symbol | number
 type Keys<Modules> = keyof Modules
 type Values<Modules> = Modules[Keys<Modules>]
+type DomElement = HTMLElement | Element | Window | Document
 declare global {
   type GlobalObject<V = any> = Record<Key, V>
   type GlobalFunction<P extends any[] = any[], R = any> = (...args: P) => R
@@ -52,6 +53,7 @@ export type {
   Key,
   Keys,
   Values,
+  DomElement,
   FunctionItems,
   ArrayItem,
   ObjectKeysPartial,

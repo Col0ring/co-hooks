@@ -2,18 +2,18 @@ import { RefObject, useEffect, useRef } from 'react'
 
 type EventType = MouseEvent | TouchEvent
 
-const defaultEvents = ['click']
+const defaultEvents: (keyof HTMLElementEventMap)[] = ['click']
 
 function useClickAway<E extends EventType = EventType>(
   ref: RefObject<HTMLElement | null>,
   onClickAway: (event: E) => void,
-  events: string[] = defaultEvents
+  events: (keyof HTMLElementEventMap)[] = defaultEvents
 ) {
   const savedCallback = useRef(onClickAway)
   savedCallback.current = onClickAway
 
   useEffect(() => {
-    const handler = (event: Event) => {
+    const handler: EventListener = (event) => {
       const { current: el } = ref
       // 执行回调
       el &&

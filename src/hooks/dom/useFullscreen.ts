@@ -2,12 +2,15 @@ import { useCallback, useRef, useState } from 'react'
 import screenfull from 'screenfull'
 import useUnmount from '../lifecycle/useUnmount'
 
-export interface Options {
+interface UseFullscreenOptions {
   onExitFull?: () => void
   onFull?: () => void
 }
 
-function useFullscreen(ref: React.RefObject<Element>, options: Options = {}) {
+function useFullscreen(
+  ref: React.RefObject<Element>,
+  options: UseFullscreenOptions = {}
+) {
   const { onExitFull, onFull } = options
 
   const onExitFullRef = useRef(onExitFull)
@@ -76,4 +79,5 @@ function useFullscreen(ref: React.RefObject<Element>, options: Options = {}) {
   ] as const
 }
 
+export type { UseFullscreenOptions }
 export default useFullscreen
