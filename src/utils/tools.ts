@@ -50,6 +50,19 @@ export function isSameDeps(
   return true
 }
 
+export function diffTwoDeps(
+  oldDeps?: React.DependencyList,
+  deps?: React.DependencyList
+): number[] {
+  return oldDeps
+    ? oldDeps
+        .map((_ele, idx) => (oldDeps[idx] !== deps?.[idx] ? idx : -1))
+        .filter((ele) => ele >= 0)
+    : deps
+    ? deps.map((_ele, idx) => idx)
+    : []
+}
+
 export function isShallowEqual(val: any, other: any) {
   if (isObject(val) && isObject(other)) {
     const props1 = Object.getOwnPropertyNames(val)
