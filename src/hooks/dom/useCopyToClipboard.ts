@@ -1,7 +1,6 @@
 import writeText from 'copy-to-clipboard'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import useMountedState from '../state/useMountedState'
-import useSetState from '../state/useSetState'
 
 interface UseCopyToClipboardState {
   value?: string
@@ -16,7 +15,7 @@ type UseCopyToClipboardReturn = [
 
 function useCopyToClipboard(): UseCopyToClipboardReturn {
   const isMounted = useMountedState()
-  const [state, setState] = useSetState<UseCopyToClipboardState>({
+  const [state, setState] = useState<UseCopyToClipboardState>({
     value: undefined,
     error: null,
     noUserInteraction: true

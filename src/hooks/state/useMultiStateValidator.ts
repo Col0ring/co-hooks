@@ -41,7 +41,7 @@ function useMultiStateValidator<
     if (validatorInner.current.length >= 2) {
       validatorInner.current(statesInner.current, setValidity)
     } else {
-      setValidity(validatorInner.current(statesInner.current))
+      setValidity((validatorInner.current as any)(statesInner.current))
     }
   }, [setValidity])
 

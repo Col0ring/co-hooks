@@ -8,27 +8,33 @@ enum TimeoutStatus {
   Called = 'called'
 }
 
-interface UseTimeoutFnReturn {
+interface UseTimeoutFnReturn<T extends GlobalFunction> {
   currentStatus: () => TimeoutStatus
   cancel: () => void
-  run: () => void
+  run: (...args: Parameters<T>) => void
 }
 
-function useTimeoutFn(handler: Function, ms: number = 0): UseTimeoutFnReturn {
+function useTimeoutFn<T extends GlobalFunction>(
+  handler: T,
+  ms: number = 0
+): UseTimeoutFnReturn<T> {
   const status = useRef<TimeoutStatus>(TimeoutStatus.Free)
   const timeout = useRef<ReturnType<typeof setTimeout>>()
   const callback = useRef(handler)
 
   const currentStatus = useCallback(() => status.current, [])
 
-  const run = useCallback(() => {
-    status.current = TimeoutStatus.Pending
-    timeout.current && clearTimeout(timeout.current)
-    timeout.current = setTimeout(() => {
-      status.current = TimeoutStatus.Called
-      callback.current()
-    }, ms)
-  }, [ms])
+  const run = useCallback(
+    (...args) => {
+      status.current = TimeoutStatus.Pending
+      timeout.current && clearTimeout(timeout.current)
+      timeout.current = setTimeout(() => {
+        status.current = TimeoutStatus.Called
+        callback.current(...args)
+      }, ms)
+    },
+    [ms]
+  )
 
   const cancel = useCallback(() => {
     status.current = TimeoutStatus.Canceled

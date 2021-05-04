@@ -1,12 +1,16 @@
 import { useEffect } from 'react'
 import useTimeoutFn, { UseTimeoutFnReturn } from './useTimeoutFn'
 
-type UseTimeoutReturn = UseTimeoutFnReturn
+type UseTimeoutReturn<T extends GlobalFunction> = UseTimeoutFnReturn<T>
 
-function useTimeout(handler: Function, ms: number = 0): UseTimeoutReturn {
+function useTimeout<T extends GlobalFunction>(
+  handler: T,
+  ms: number = 0,
+  ...args: Parameters<T>
+): UseTimeoutReturn<T> {
   const context = useTimeoutFn(handler, ms)
   useEffect(() => {
-    context.run()
+    context.run(...args)
   }, [ms])
   return context
 }

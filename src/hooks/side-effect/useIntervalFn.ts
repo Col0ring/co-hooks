@@ -8,27 +8,34 @@ enum IntervalStatus {
   Calling = 'calling'
 }
 
-interface UseIntervalFnReturn {
+interface UseIntervalFnReturn<T extends GlobalFunction> {
   currentStatus: () => IntervalStatus
   cancel: () => void
-  run: () => void
+  run: (...args: Parameters<T>) => void
 }
-
-function useIntervalFn(handler: Function, ms: number = 0): UseIntervalFnReturn {
+type A = [a: string, b: number]
+type B = Partial<A>
+function useIntervalFn<T extends GlobalFunction>(
+  handler: T,
+  ms: number = 0
+): UseIntervalFnReturn<T> {
   const status = useRef<IntervalStatus>(IntervalStatus.Free)
   const interval = useRef<ReturnType<typeof setInterval>>()
   const callback = useRef(handler)
 
   const currentStatus = useCallback(() => status.current, [])
 
-  const run = useCallback(() => {
-    status.current = IntervalStatus.Pending
-    interval.current && clearInterval(interval.current)
-    interval.current = setInterval(() => {
-      status.current = IntervalStatus.Calling
-      callback.current()
-    }, ms)
-  }, [ms])
+  const run = useCallback(
+    (...args) => {
+      status.current = IntervalStatus.Pending
+      interval.current && clearInterval(interval.current)
+      interval.current = setInterval(() => {
+        status.current = IntervalStatus.Calling
+        callback.current(...args)
+      }, ms)
+    },
+    [ms]
+  )
 
   const cancel = useCallback(() => {
     status.current = IntervalStatus.Canceled

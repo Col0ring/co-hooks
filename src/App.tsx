@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import Test from './Test'
 import Test2 from './Test2'
 import useAsync from './hooks/side-effect/useAsync'
@@ -15,10 +15,13 @@ function App() {
       }, 1000)
     })
   }, [])
-
+  const ref = useRef<HTMLElement | null>(null)
   const { data, loading } = useAsync(fetchFunction, [count], {}, 1)
+  const a = (el: HTMLElement | null) => {
+    ref.current = el
+  }
   return (
-    <div className="App">
+    <div ref={a} className="App">
       <header className="App-header">
         {show && <Test />}
         <Test2 />

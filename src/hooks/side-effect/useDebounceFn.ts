@@ -10,8 +10,8 @@ enum DebounceStatus {
 interface UseDebounceFnReturn<T extends GlobalFunction> {
   currentStatus: () => DebounceStatus
   cancel: () => void
-  run: () => ReturnType<T>
-  flush: () => ReturnType<T>
+  run: (...args: Parameters<T>) => ReturnType<T>
+  flush: (...args: Parameters<T>) => ReturnType<T>
 }
 
 type DebounceParams = Parameters<typeof debounce>

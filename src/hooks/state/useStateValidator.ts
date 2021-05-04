@@ -9,10 +9,15 @@ import {
 
 // 第一个参数是是否 valid,实际是通过 validator 的烦值返回一个数组才可以，然后数组里面的其它参数额可以自己控制
 type ValidityState = [boolean | undefined, ...any[]] | [undefined]
+
+// TODO: type
 interface StateValidator<V, S> {
-  (state: S): V
+  // (state: S): V
+  // // 如果只有一个参数要返回值，如果有两个参数就自己使用 dispatch
+  // (state: S, dispatch: Dispatch<SetStateAction<V>>): void
+  // (state: S): V
   // 如果只有一个参数要返回值，如果有两个参数就自己使用 dispatch
-  (state: S, dispatch: Dispatch<SetStateAction<V>>): void
+  (state: S, dispatch: Dispatch<SetStateAction<V>>): V | void
 }
 
 type UseStateValidatorReturn<V> = [V, () => void]
@@ -36,7 +41,7 @@ function useStateValidator<V extends ValidityState, S>(
     if (validatorInner.current.length >= 2) {
       validatorInner.current(stateInner.current, setValidity)
     } else {
-      setValidity(validatorInner.current(stateInner.current))
+      setValidity((validatorInner.current as any)(stateInner.current))
     }
   }, [setValidity])
 
