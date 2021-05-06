@@ -22,7 +22,6 @@ interface VirtualWrapperProps {
 function useVirtualList<T = any>(list: T[], options: UseVirtualListOptions<T>) {
   // 包装容器
   const containerRef = useRef<HTMLElement | null>(null)
-  const isScriptTrigger = useRef(false)
   const size = useSize(containerRef)
 
   const [state, setState] = useState({ start: 0, end: 10 })
