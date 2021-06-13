@@ -41,5 +41,5 @@ function useMethods<S, M extends Record<Key, (...args: any[]) => S>>(
   return [state, wrappedMethods]
 }
 
-export type { Action, CreateMethods }
+export type { Action, CreateMethods, WrappedMethods }
 export default useMethods
