@@ -9,12 +9,11 @@ enum IntervalStatus {
 }
 
 interface UseIntervalFnReturn<T extends GlobalFunction> {
-  currentStatus: () => IntervalStatus
+  currentStatus: () => 'free' | 'pending' | 'cancelled' | 'called'
   cancel: () => void
   run: (...args: Parameters<T>) => void
 }
-type A = [a: string, b: number]
-type B = Partial<A>
+
 function useIntervalFn<T extends GlobalFunction>(
   handler: T,
   ms: number = 0

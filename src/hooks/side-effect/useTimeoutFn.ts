@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import useUnmount from '../lifecycle/useUnmount'
 
 enum TimeoutStatus {
@@ -9,7 +9,7 @@ enum TimeoutStatus {
 }
 
 interface UseTimeoutFnReturn<T extends GlobalFunction> {
-  currentStatus: () => TimeoutStatus
+  currentStatus: () => 'free' | 'pending' | 'cancelled' | 'called'
   cancel: () => void
   run: (...args: Parameters<T>) => void
 }
@@ -21,6 +21,7 @@ function useTimeoutFn<T extends GlobalFunction>(
   const status = useRef<TimeoutStatus>(TimeoutStatus.Free)
   const timeout = useRef<ReturnType<typeof setTimeout>>()
   const callback = useRef(handler)
+  callback.current = handler
 
   const currentStatus = useCallback(() => status.current, [])
 
@@ -40,10 +41,6 @@ function useTimeoutFn<T extends GlobalFunction>(
     status.current = TimeoutStatus.Canceled
     timeout.current && clearTimeout(timeout.current)
   }, [])
-
-  useEffect(() => {
-    callback.current = handler
-  }, [handler])
 
   useUnmount(cancel)
 

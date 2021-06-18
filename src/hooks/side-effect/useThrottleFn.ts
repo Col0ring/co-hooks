@@ -8,7 +8,7 @@ enum ThrottleStatus {
 }
 
 interface UseThrottleFnReturn<T extends GlobalFunction> {
-  currentStatus: () => ThrottleStatus
+  currentStatus: () => 'free' | 'pending'
   cancel: () => void
   run: (...args: Parameters<T>) => ReturnType<T>
   flush: (...args: Parameters<T>) => ReturnType<T>
@@ -59,7 +59,7 @@ function useThrottleFn<T extends ThrottleParams[0]>(
     currentStatus,
     run,
     cancel: throttled.cancel,
-    flush: (throttled.flush as unknown) as T
+    flush: throttled.flush as unknown as T
   }
 }
 export type { UseThrottleFnReturn, ThrottleParams, ThrottleOptions }

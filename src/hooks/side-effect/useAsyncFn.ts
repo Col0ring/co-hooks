@@ -36,6 +36,9 @@ function useAsyncFn<P extends any[] = any[], R = any>(
     countRef.current++
 
     return asyncFn(...args)
+      .finally(() => {
+        countRef.current--
+      })
       .then(
         (value) => {
           countRef.current === 0 &&
@@ -56,9 +59,6 @@ function useAsyncFn<P extends any[] = any[], R = any>(
           return error
         }
       )
-      .finally(() => {
-        countRef.current--
-      })
   }, deps)
 
   return [state, callbackFn]
