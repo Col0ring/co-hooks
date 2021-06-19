@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import useSsrLayoutEffect from '../lifecycle/useSsrLayoutEffect'
 
 // sync import
-if (!window.ResizeObserver) {
-  window.ResizeObserver = (await import('resize-observer-polyfill')).default
-}
+;(async () => {
+  if (!window.ResizeObserver) {
+    window.ResizeObserver = (await import('resize-observer-polyfill')).default
+  }
+})()
 
 type UseSizeState = Pick<
   DOMRectReadOnly,
@@ -36,16 +38,8 @@ function useSize(ref: React.RefObject<Element>): UseSizeState {
         if (!entry) {
           return
         }
-        const {
-          x,
-          y,
-          width,
-          height,
-          top,
-          left,
-          bottom,
-          right
-        } = entry.contentRect
+        const { x, y, width, height, top, left, bottom, right } =
+          entry.contentRect
 
         setState({
           x,
