@@ -16,7 +16,10 @@ const defaultState: UseDomRectState = {
   right: 0
 }
 
-function useDomRect(ref: React.RefObject<Element>): UseDomRectState {
+function useDomRect(
+  ref: React.RefObject<Element>,
+  deps?: React.DependencyList
+): UseDomRectState {
   const [state, setState] = useState<UseDomRectState>(defaultState)
 
   useEffect(() => {
@@ -35,9 +38,10 @@ function useDomRect(ref: React.RefObject<Element>): UseDomRectState {
       bottom,
       right
     })
-  }, [ref])
+  }, deps)
 
   return state
 }
 
+export type { UseDomRectState }
 export default useDomRect
