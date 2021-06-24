@@ -63,4 +63,5 @@ function useSize(ref: React.RefObject<Element>): UseSizeState {
   return state
 }
 
+export type { UseSizeState }
 export default useSize
