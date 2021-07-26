@@ -1,4 +1,5 @@
 import React from 'react'
+import { DomElement, DomParam, ResolvePromise } from '../typings/tools'
 
 export function noop() {}
 
@@ -9,6 +10,11 @@ export const nullRef: React.RefObject<any> = {
 export const isBrowser = typeof window !== 'undefined'
 
 export const isNavigator = typeof navigator !== 'undefined'
+export function isRef<T extends DomElement = DomElement>(
+  value: DomParam<T>
+): value is React.RefObject<T> {
+  return value && typeof value === 'object' && value.hasOwnProperty('current')
+}
 
 export function isPromiseLike(value: any): value is PromiseLike<any> {
   return (
@@ -80,4 +86,27 @@ export function isShallowEqual(val: any, other: any) {
     return true
   }
   return val === other
+}
+
+export function resolvePromise<T>(value: T) {
+  return new Promise<ResolvePromise<T>>((resolve, reject) => {
+    if (value instanceof Promise) {
+      value
+        .then((res) => {
+          resolve(resolvePromise(res))
+        })
+        .catch((err) => reject(err))
+    } else {
+      resolve(value as ResolvePromise<T>)
+    }
+  })
+}
+
+export function getDomElement<T extends DomElement>(
+  ref: DomParam<T>
+): T | null {
+  if (isRef(ref)) {
+    return ref.current
+  }
+  return ref
 }

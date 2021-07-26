@@ -1,7 +1,12 @@
+import React from 'react'
 type Key = string | symbol | number
 type Keys<Modules> = keyof Modules
 type Values<Modules> = Modules[Keys<Modules>]
+type ResolvePromise<T> = T extends Promise<infer U> ? U : T
+
 type DomElement = HTMLElement | Element | Window | Document
+
+type DomParam<T extends DomElement = DomElement> = React.RefObject<T> | T
 declare global {
   type GlobalObject<V = any> = Record<Key, V>
   type GlobalFunction<P extends any[] = any[], R = any> = (...args: P) => R
@@ -54,6 +59,7 @@ export type {
   Keys,
   Values,
   DomElement,
+  DomParam,
   FunctionItems,
   ArrayItem,
   ObjectKeysPartial,
@@ -64,5 +70,6 @@ export type {
   FunctionParamsAndReturnPartial,
   FunctionParamsValueAndReturnPartial,
   AsyncFunction,
-  PromiseValue
+  PromiseValue,
+  ResolvePromise
 }

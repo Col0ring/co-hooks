@@ -1,20 +1,27 @@
 import { MutableRefObject, useCallback, useRef } from 'react'
 import useUpdateEffect from '../lifecycle/useUpdateEffect'
 import useForceUpdate from './useForceUpdate'
+interface AnyAction<T = any> {
+  type: T
+  [extraProps: string]: any
+}
 
-type Dispatch<Action> = (action: Action) => void
-
-interface Store<Action, State> {
+interface Dispatch<A extends AnyAction = AnyAction> {
+  <T extends A>(action: T): T
+}
+interface Store<Action extends AnyAction, State> {
   getState: () => State
   dispatch: Dispatch<Action>
 }
 
-type Middleware<Action, State> = (
+type Middleware<Action extends AnyAction, State> = (
   store: Store<Action, State>
-) => (next: Dispatch<Action>) => (action: Action) => void
+) => (next: Dispatch<Action>) => (action: Action) => any
 
 // 合并中间件
-function composeMiddleware<Action, State>(chain: Middleware<Action, State>[]) {
+function composeMiddleware<Action extends AnyAction, State>(
+  chain: Middleware<Action, State>[]
+) {
   return (context: Store<Action, State>, dispatch: Dispatch<Action>) => {
     // 先后再前
     return chain.reduceRight((dispatchAction, middleware) => {
@@ -23,7 +30,7 @@ function composeMiddleware<Action, State>(chain: Middleware<Action, State>[]) {
   }
 }
 
-const createReducer = <Action, State>(
+const createReducer = <Action extends AnyAction, State>(
   ...middlewares: Middleware<Action, State>[]
 ) => {
   // 已经合并后的中间件
@@ -39,10 +46,11 @@ const createReducer = <Action, State>(
     const forceUpdate = useForceUpdate()
     // dispatch origin
     const dispatch = useCallback(
-      (action) => {
+      <T extends Action>(action: T): T => {
         // 改变 state
         ref.current = reducer(ref.current, action)
         forceUpdate()
+        return action
       },
       [reducer, forceUpdate]
     )
@@ -73,5 +81,5 @@ const createReducer = <Action, State>(
     return [ref.current, dispatchRef.current]
   }
 }
-export type { Dispatch, Store, Middleware }
+export type { AnyAction, Dispatch, Store, Middleware }
 export default createReducer

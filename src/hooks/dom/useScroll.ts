@@ -1,3 +1,5 @@
+import { DomElement, DomParam } from '../../typings/tools'
+import { getDomElement } from '../../utils/tools'
 import useRafState from '../state/useRafState'
 import useEventListener from './useEventListener'
 
@@ -13,7 +15,7 @@ function isDocument(el: HTMLElement | Document): el is Document {
 }
 
 function useScroll(
-  ref: React.RefObject<HTMLElement | Document>,
+  ref: DomParam<Extract<DomElement, HTMLElement | Document>>,
   shouldUpdate: ScrollListenController = () => true
 ): UseScrollState {
   const [state, setState] = useRafState<UseScrollState>({
@@ -22,9 +24,10 @@ function useScroll(
   })
 
   useEventListener(ref, 'scroll', () => {
-    if (ref.current) {
+    const el = getDomElement(ref)
+    if (el) {
       let position: UseScrollState
-      if (isDocument(ref.current)) {
+      if (isDocument(el)) {
         if (!document.scrollingElement) {
           return
         }
@@ -34,8 +37,8 @@ function useScroll(
         }
       } else {
         position = {
-          x: ref.current.scrollLeft,
-          y: ref.current.scrollTop
+          x: el.scrollLeft,
+          y: el.scrollTop
         }
       }
       shouldUpdate(position) && setState(position)

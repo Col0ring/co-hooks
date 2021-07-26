@@ -1,38 +1,40 @@
-import React, { useEffect, useRef } from 'react'
-import { DomElement } from '../../typings/tools'
+import { useEffect, useRef } from 'react'
+import { DomParam } from '../../typings/tools'
+import { getDomElement } from '../../utils/tools'
 
+// TODO: ref 传入方式
 function useEventListener<K extends keyof HTMLElementEventMap>(
-  ref: React.RefObject<DomElement>,
+  ref: DomParam,
   eventName: K,
   handler: (ev: HTMLElementEventMap[K]) => void,
   options?: EventListenerOptions
 ): void
 function useEventListener<K extends keyof ElementEventMap>(
-  ref: React.RefObject<DomElement>,
+  ref: DomParam,
   eventName: K,
   handler: (ev: ElementEventMap[K]) => void,
   options?: EventListenerOptions
 ): void
 function useEventListener<K extends keyof DocumentEventMap>(
-  ref: React.RefObject<DomElement>,
+  ref: DomParam,
   eventName: K,
   handler: (ev: DocumentEventMap[K]) => void,
   options?: EventListenerOptions
 ): void
 function useEventListener<K extends keyof WindowEventMap>(
-  ref: React.RefObject<DomElement>,
+  ref: DomParam,
   eventName: K,
   handler: (ev: WindowEventMap[K]) => void,
   options?: EventListenerOptions
 ): void
 function useEventListener(
-  ref: React.RefObject<DomElement>,
+  ref: DomParam,
   eventName: string,
   handler: Function,
   options: EventListenerOptions
 ): void
 function useEventListener(
-  ref: React.RefObject<DomElement>,
+  ref: DomParam,
   eventName: string,
   handler: Function,
   options: AddEventListenerOptions = {}
@@ -41,11 +43,10 @@ function useEventListener(
   handlerRef.current = handler
 
   useEffect(() => {
-    if (!ref.current) {
+    const el = getDomElement(ref)
+    if (!el) {
       return
     }
-    const { current: el } = ref
-
     const eventListener: EventListener = (event) => {
       return handlerRef.current?.(event)
     }

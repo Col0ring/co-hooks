@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { nullRef } from '../../utils/tools'
+import { DomElement, DomParam } from '../../typings/tools'
+import { getDomElement, nullRef } from '../../utils/tools'
 import useRafState from '../state/useRafState'
 import useEventListener from './useEventListener'
 import useHover from './useHover'
@@ -34,27 +34,22 @@ const initState: UseElementMouseState = {
 }
 
 function useElementMouse(
-  ref: React.RefObject<Element>,
+  ref: DomParam<Exclude<DomElement, Window | Document>>,
   options: UseElementMouseOptions = {}
 ): UseElementMouseState {
   const whenHovered = !!options.whenHovered
   const bound = !!options.bound
-  const documentRef = useRef(document)
   const isHovering = useHover(ref)
   const [state, setState] = useRafState<UseElementMouseState>(initState)
   useEventListener(
-    whenHovered && !isHovering ? nullRef : documentRef,
+    whenHovered && !isHovering ? nullRef : document,
     'mousemove',
     (event) => {
-      if (!ref.current) {
+      const el = getDomElement(ref)
+      if (!el) {
         return
       }
-      const {
-        left,
-        top,
-        width: elW,
-        height: elH
-      } = ref.current.getBoundingClientRect()
+      const { left, top, width: elW, height: elH } = el.getBoundingClientRect()
       const posX = left + window.pageXOffset
       const posY = top + window.pageYOffset
       let elX = event.pageX - posX

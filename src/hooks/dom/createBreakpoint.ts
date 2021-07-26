@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { isShallowEqual } from '../../utils/tools'
 import useEventListener from './useEventListener'
 const initialBreakPoint = {
@@ -24,13 +24,12 @@ function calculate<T extends Record<string, number>>(
 
 function createBreakpoint<
   T extends Record<string, number> = typeof initialBreakPoint
->(breakpoints: T = (initialBreakPoint as unknown) as T) {
+>(breakpoints: T = initialBreakPoint as unknown as T) {
   return function useBreakpoint(): Record<keyof T, boolean> {
-    const windowRef = useRef(window)
     const [state, setState] = useState(() => calculate(breakpoints))
 
     // listener
-    useEventListener(windowRef, 'resize', () => {
+    useEventListener(window, 'resize', () => {
       const newState = calculate(breakpoints)
       if (!isShallowEqual(state, newState)) {
         setState(newState)

@@ -1,16 +1,15 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import useEventListener from './useEventListener'
 
 type usePageVisibilityState = 'hidden' | 'visible' | 'prerender' | undefined
 
 function usePageVisibility(): usePageVisibilityState {
-  const documentRef = useRef(document)
   const [pageVisibility, setPageVisibility] = useState<VisibilityState>(
-    () => documentRef.current?.visibilityState || undefined
+    () => document.visibilityState || undefined
   )
 
-  useEventListener(documentRef, 'visibilitychange', () => {
-    setPageVisibility(documentRef.current.visibilityState)
+  useEventListener(document, 'visibilitychange', () => {
+    setPageVisibility(document.visibilityState)
   })
 
   return pageVisibility

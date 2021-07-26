@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import useEventListener from './useEventListener'
 
 function useMouseWheel() {
-  const windowRef = useRef(window)
   const [mouseWheelScrolled, setMouseWheelScrolled] = useState(0)
 
-  useEventListener(windowRef, 'wheel', (e) => {
+  useEventListener(window, 'wheel', (e) => {
     setMouseWheelScrolled(e.deltaY + mouseWheelScrolled)
   })
 

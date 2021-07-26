@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { DomElement } from '../../typings/tools'
+import { useState } from 'react'
+import { DomParam } from '../../typings/tools'
 import useEventListener from './useEventListener'
 
 interface UseMouseState {
@@ -23,7 +23,7 @@ const initState: UseMouseState = {
   pageY: NaN
 }
 
-function useMouse(ref: React.RefObject<DomElement>) {
+function useMouse(ref: DomParam) {
   const [state, setState] = useState(initState)
 
   useEventListener(ref, 'mousemove', (event) => {

@@ -42,6 +42,5 @@ function useDomRect(
 
   return state
 }
-
 export type { UseDomRectState }
 export default useDomRect
